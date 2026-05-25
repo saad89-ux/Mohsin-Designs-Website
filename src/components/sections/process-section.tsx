@@ -64,73 +64,69 @@ export function ProcessSection() {
     offset: ['start start', 'end end'],
   });
 
-  // Calculate dynamic active step (1 to 6) based on scroll progress
-  // progress goes from 0 to 1. There are 6 steps.
-  const activeStepRaw = useTransform(scrollYProgress, [0, 1], [1, 6.99]);
-  
-  // Create a height transform for the vertical progress bar
-  const progressBarHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+
 
   return (
-    <section 
-      ref={containerRef} 
-      className="relative bg-[#050914] text-white selection:bg-blue-500/30"
+    <section
+      ref={containerRef}
+      className="relative bg-[#050505] font-sans text-white selection:bg-blue-500/30"
     >
-      {/* Background ambient glow */}
-      <div className="absolute top-0 inset-x-0 h-[500px] bg-gradient-to-b from-[#0305a8]/10 to-transparent pointer-events-none" />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none opacity-50" />
+      {/* Dot grid */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="w-full h-full" style={{
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 1.5px, transparent 1.5px)',
+            backgroundSize: '48px 48px',
+            backgroundPosition: '0 0',
+        }} />
+      </div>
+
+      {/* Noise texture overlay */}
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.02] mix-blend-overlay bg-noise" />
 
       <div className="mx-auto max-w-7xl px-6 relative z-10">
-        <div className="flex flex-col lg:flex-row items-start relative pb-32">
-          
-          {/* LEFT: Sticky Column */}
-          <div className="w-full lg:w-5/12 lg:sticky lg:top-0 pt-24 lg:pt-40 lg:h-screen flex flex-col justify-start">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+        {/* TOP SECTION: Heading */}
+        <div className="mb-24 pt-24 lg:pt-32">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="text-center"
+          >
+            <h2
+              className="text-white font-black mx-auto mb-8"
+              style={{
+                fontSize: 'clamp(40px, 4vw, 56px)',
+                lineHeight: 1.05,
+                letterSpacing: '-0.03em',
+                color: '#ffffff',
+              }}
             >
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-2 text-xs text-blue-300 font-bold uppercase tracking-widest mb-6 backdrop-blur-sm">
-                <Terminal className="w-4 h-4 text-blue-400" />
-                <span>Execution Protocol</span>
-              </div>
-              
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/40 tracking-tight leading-[1.05] mb-6">
-                Engineered<br />to Perform.
-              </h2>
-              
-              <p className="text-lg text-slate-400 font-medium leading-relaxed max-w-md mb-12">
-                We don't just build websites. We deploy high-performance digital engines engineered to dominate search rankings and maximize conversion rates.
-              </p>
+              Engineered{' '}
+              <span
+                style={{
+                  backgroundColor: '#1B7EFC',
+                  color: '#ffffff',
+                  padding: '2px 20px 8px 20px',
+                  borderRadius: '20px',
+                  display: 'inline-block',
+                }}
+              >
+                to Perform
+              </span>
+            </h2>
 
-              {/* Progress Indicator */}
-              <div className="hidden lg:flex items-start gap-8">
-                {/* Vertical Track */}
-                <div className="relative w-1.5 h-64 bg-slate-800/50 rounded-full overflow-hidden">
-                  <motion.div 
-                    style={{ height: progressBarHeight }}
-                    className="absolute top-0 left-0 w-full bg-gradient-to-b from-blue-500 via-purple-500 to-emerald-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.6)]"
-                  />
-                </div>
-                
-                {/* Dynamic Step Display */}
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-2">Current Phase</span>
-                  <div className="text-7xl font-black tabular-nums text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-600">
-                    <motion.span>
-                      {useTransform(activeStepRaw, (v) => `0${Math.floor(v)}`)}
-                    </motion.span>
-                    <span className="text-3xl text-slate-700">/06</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+            <p className="text-lg text-[#9CA3AF] font-medium leading-relaxed max-w-2xl mx-auto text-center">
+              We don't just build websites. We deploy high-performance digital engines engineered to dominate search rankings and maximize conversion rates.
+            </p>
+          </motion.div>
+        </div>
 
-          {/* RIGHT: Scrollable Cards Column */}
-          <div className="w-full lg:w-7/12 pt-16 lg:pt-40 lg:pb-40 relative z-20">
-            <div className="flex flex-col gap-24 lg:gap-40">
+        <div className="flex flex-col items-center relative pb-32">
+
+          {/* Scrollable Cards Column - Centered */}
+          <div className="w-full max-w-5xl pt-8 lg:pt-16 lg:pb-24 relative z-20 mx-auto">
+            <div className="flex flex-col gap-24 lg:gap-32">
               {steps.map((step, index) => (
                 <ProcessCard key={step.id} step={step} index={index} />
               ))}
@@ -145,7 +141,7 @@ export function ProcessSection() {
 
 function ProcessCard({ step, index }: { step: any, index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  
+
   // Card local scroll progress
   const { scrollYProgress } = useScroll({
     target: cardRef,
@@ -168,11 +164,8 @@ function ProcessCard({ step, index }: { step: any, index: number }) {
       <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none mix-blend-overlay" />
 
       {/* Card Header */}
-      <div className="flex items-center justify-between mb-8 relative z-10">
-        <span className="text-6xl md:text-8xl font-black text-white/5 select-none transition-colors duration-500 group-hover:text-white/10">
-          {step.id}
-        </span>
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 shadow-lg`}>
+      <div className="flex items-center justify-start mb-8 relative z-10">
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 shadow-lg`}>
           <Activity className={`w-6 h-6 text-transparent bg-clip-text bg-gradient-to-br ${step.accent}`} style={{ color: 'white' }} />
         </div>
       </div>
@@ -181,7 +174,7 @@ function ProcessCard({ step, index }: { step: any, index: number }) {
         <h3 className="text-2xl md:text-4xl font-black text-white mb-6 tracking-tight leading-tight">
           {step.title}
         </h3>
-        
+
         <p className="text-slate-400 text-lg leading-relaxed mb-10 font-medium">
           {step.desc}
         </p>
@@ -194,10 +187,10 @@ function ProcessCard({ step, index }: { step: any, index: number }) {
               Core Deliverables
             </h4>
           </div>
-          
+
           <ul className="flex flex-col gap-3">
             {step.deliverables.map((item: string, i: number) => (
-              <motion.li 
+              <motion.li
                 key={i}
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}

@@ -1,164 +1,290 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { easings } from '@/lib/motion/easings';
+import { durations } from '@/lib/motion/durations';
 
+gsap.registerPlugin(ScrollTrigger);
+
+/* ─── Service data ─── */
 const services = [
   {
-    title: 'Logo Design',
-    description: 'Custom, high-impact logo concepts that represent your core brand identity and differentiate you in competitive markets.',
-    image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80',
-    features: ['Multiple Design Directions', 'Vector Master Files', 'Mini Brand Guidelines', 'Full Copyright Transfer'],
-    href: '/services/logo-design',
+    title: 'Predictive Analytics',
+    description: 'Forecast trends and make data-driven decisions with our advanced ML models.',
+    icon: '📊',
+    gradient: 'linear-gradient(135deg, #1a5c2e 0%, #2d8a4e 40%, #e74c3c 60%, #f1c40f 80%, #e67e22 100%)',
   },
   {
-    title: 'Technical SEO',
-    description: 'Deep site architecture audit and optimization designed for search engine crawlers and rapid core web vitals load speeds.',
-    image: 'https://images.unsplash.com/photo-1571721795195-a2ca2d33e402?auto=format&fit=crop&w=600&q=80',
-    features: ['Performance & Page Speed Tuning', 'Structured Schema Markup', 'Full Indexing Audit', 'Mobile Usability Design'],
-    href: '/services/technical-seo',
+    title: 'AI Consulting',
+    description: 'Expert guidance on implementing AI solutions for your business needs.',
+    icon: '🤖',
+    gradient: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #F59E0B 100%)',
   },
   {
-    title: 'Google Ads PPC',
-    description: 'Data-guided search engine marketing campaigns precision-targeted to maximize marketing ROI and attract qualified leads.',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80',
-    features: ['In-Depth Keyword Research', 'Copywriting & A/B Experiments', 'Advanced Conversion Tracking', 'Landing Page Auditing'],
-    href: '/services/google-ads',
+    title: 'Data Engineering',
+    description: 'Build robust data pipelines and infrastructure for ML operations.',
+    icon: '🗄️',
+    gradient: 'linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #94A3B8 100%)',
   },
   {
-    title: 'Brand Identity Systems',
-    description: 'End-to-end holistic brand frameworks that establish standard style guides, values, and strong client relationships.',
-    image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=600&q=80',
-    features: ['Curated Color Systems', 'Modern Typography Matrix', 'Comprehensive Brand Guidelines', 'Unified Copywriting Voice'],
-    href: '/services/brand-identity',
+    title: 'Machine Learning',
+    description: 'Custom ML model development and deployment for production-grade systems.',
+    icon: '🧠',
+    gradient: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #F43F5E 100%)',
   },
   {
-    title: 'Kinetic Logo Animation',
-    description: 'Sleek, fluid custom motion graphics that bring brand visual logos to life across premium video assets & applications.',
-    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80',
-    features: ['Fluid 2D & 3D WebGL Motion', 'Custom Audio & Sound Design', 'High-Fidelity Transparent Formats', 'Intro & Outro Sequencing'],
-    href: '/services/logo-animation',
+    title: 'Cloud Architecture',
+    description: 'Scalable cloud infrastructure design optimized for AI/ML workloads.',
+    icon: '☁️',
+    gradient: 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 50%, #6366F1 100%)',
   },
   {
-    title: 'Web & App Development',
-    description: 'Ultra-fast Next.js React applications built with modern headless CMS setups and robust server infrastructures.',
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80',
-    features: ['Next.js React Ecosystem', 'Modern Headless API Integrations', 'E-Commerce Infrastructure', 'Lighthouse Optimization'],
-    href: '/services/website-development',
+    title: 'Data Visualization',
+    description: 'Interactive dashboards and real-time analytics for actionable insights.',
+    icon: '📈',
+    gradient: 'linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%)',
+  },
+  {
+    title: 'NLP Solutions',
+    description: 'Natural language processing for chatbots, sentiment analysis, and text mining.',
+    icon: '💬',
+    gradient: 'linear-gradient(135deg, #F59E0B 0%, #EF4444 50%, #EC4899 100%)',
+  },
+  {
+    title: 'Computer Vision',
+    description: 'Image recognition, object detection, and visual AI for enterprise applications.',
+    icon: '👁️',
+    gradient: 'linear-gradient(135deg, #14B8A6 0%, #0EA5E9 50%, #6366F1 100%)',
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-};
+const VISIBLE_COUNT = 3;
+const AUTO_SLIDE_INTERVAL = 2000; // ms
 
-const cardVariants = {
-  hidden: { y: 40, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: 'spring' as const,
-      stiffness: 100,
-      damping: 15,
-    },
-  },
-};
-
+/* ─── Component ─── */
 export function ServicesOverviewSection() {
-  return (
-    <section className="py-28 bg-[#fdfdfe] relative overflow-hidden">
-      {/* Decorative vector background */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#0305a8]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#3b82f6]/5 rounded-full blur-3xl pointer-events-none" />
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isInView, setIsInView] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-      <div className="mx-auto max-w-7xl px-6 relative z-10">
-        
-        {/* Section Header */}
-        <div className="max-w-3xl mb-20">
-          <span className="inline-block px-3 py-1.5 rounded-full bg-[#0305a8]/5 text-[#0305a8] font-bold text-xs uppercase tracking-wider mb-4 border border-[#0305a8]/10">
-            Our Expertise
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#0305a8] tracking-tight mb-6">
-            Digital Capabilities Built to Scale
+  /* ── Get the 3 visible cards ── */
+  const getVisibleCards = useCallback(() => {
+    const cards = [];
+    for (let i = 0; i < VISIBLE_COUNT; i++) {
+      const idx = (currentIndex + i) % services.length;
+      cards.push({ ...services[idx], originalIndex: idx });
+    }
+    return cards;
+  }, [currentIndex]);
+
+  /* ── Auto-slide logic ── */
+  const startAutoSlide = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % services.length);
+    }, AUTO_SLIDE_INTERVAL);
+  }, []);
+
+  const stopAutoSlide = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  /* ── Start/stop auto-slide based on viewport visibility ── */
+  useEffect(() => {
+    if (isInView) {
+      startAutoSlide();
+    } else {
+      stopAutoSlide();
+    }
+    return () => stopAutoSlide();
+  }, [isInView, startAutoSlide, stopAutoSlide]);
+
+  /* ── GSAP scroll-triggered entrance + viewport observer ── */
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      /* Heading entrance */
+      gsap.fromTo(
+        headingRef.current,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: durations.slow,
+          ease: easings.smooth,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      );
+
+      /* Track in-view state for auto-slide */
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top 85%',
+        end: 'bottom 15%',
+        onEnter: () => setIsInView(true),
+        onLeave: () => setIsInView(false),
+        onEnterBack: () => setIsInView(true),
+        onLeaveBack: () => setIsInView(false),
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const visibleCards = getVisibleCards();
+  return (
+    <section
+      ref={sectionRef}
+      className="relative py-24 md:py-32 overflow-hidden bg-[#050505] font-sans"
+    >
+      {/* ── Background dot grid ── */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 1.5px, transparent 1.5px)',
+            backgroundSize: '48px 48px',
+            backgroundPosition: '0 0',
+          }}
+        />
+      </div>
+
+      {/* Noise texture overlay */}
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.02] mix-blend-overlay bg-noise" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
+        {/* ── Section heading ── */}
+        <div ref={headingRef} className="text-center mb-16 md:mb-20">
+          <h2
+            className="text-white font-black"
+            style={{
+              fontSize: 'clamp(40px, 4vw, 56px)',
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
+              color: '#ffffff',
+            }}
+          >
+            Our Ultimate Set of Services
+            <br />
+            for Your Ideas Implementation
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 font-semibold leading-relaxed">
-            We merge premium, world-class modern aesthetic design with advanced engineering to launch systems that command attention and drive conversion.
-          </p>
         </div>
 
-        {/* Services Card Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        {/* ── Auto-sliding cards ── */}
+        <div
+          className="relative"
+          onMouseEnter={stopAutoSlide}
+          onMouseLeave={() => isInView && startAutoSlide()}
         >
-          {services.map((service, idx) => (
-            <motion.div
-              key={service.title}
-              variants={cardVariants}
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
-              className="bg-white rounded-3xl border border-slate-100 hover:border-[#0305a8]/15 overflow-hidden transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.015)] hover:shadow-[0_20px_50px_rgba(3,5,168,0.08)] flex flex-col justify-between group"
-            >
-              <div>
-                {/* Service Visual representation */}
-                <div className="relative h-56 w-full overflow-hidden select-none">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10" />
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
-                    loading="lazy"
-                  />
-                  <span className="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-[#0305a8] text-[#fff35c] font-black text-xs uppercase tracking-widest shadow-md">
-                    0{idx + 1}
-                  </span>
-                </div>
-
-                {/* Card Info */}
-                <div className="p-8">
-                  <h3 className="text-2xl font-black text-[#0305a8] mb-4">
-                    {service.title}
-                  </h3>
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed font-medium mb-6">
-                    {service.description}
-                  </p>
-
-                  {/* Bullet Highlights */}
-                  <ul className="space-y-3">
-                    {service.features.map((feature, fIdx) => (
-                      <li key={fIdx} className="flex items-center gap-3 text-xs md:text-sm font-bold text-gray-700">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <div className="p-8 pt-0 mt-auto">
-                <Link
-                  href={service.href}
-                  className="inline-flex items-center justify-between w-full px-5 py-3.5 rounded-xl border border-[#0305a8]/10 text-sm font-black text-[#0305a8] bg-gray-50/50 hover:bg-[#0305a8] hover:text-[#fff35c] transition-all duration-300 shadow-sm"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <AnimatePresence mode="popLayout">
+              {visibleCards.map((service, i) => (
+                <motion.div
+                  key={`${service.title}-${currentIndex}-${i}`}
+                  initial={{ opacity: 0, x: 120, scale: 0.92 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -120, scale: 0.92 }}
+                  transition={{
+                    duration: 0.6,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                    delay: i * 0.08,
+                  }}
+                  className="group"
                 >
-                  Explore Service
-                  <ArrowUpRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+                  {/* Card */}
+                  <div
+                    className="relative rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer"
+                    style={{
+                      background: 'linear-gradient(145deg, #111111 0%, #0a0a0a 100%)',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    {/* Hover border glow */}
+                    <div
+                      className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        background: 'linear-gradient(145deg, rgba(27,126,252,0.12), transparent 60%)',
+                      }}
+                    />
 
+                    {/* ── Icon / illustration area ── */}
+                    <div
+                      className="relative flex items-center justify-center py-14 md:py-16 overflow-hidden"
+                    >
+                      {/* Soft background gradient glow */}
+                      <div
+                        className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-500"
+                        style={{ background: service.gradient, filter: 'blur(40px)' }}
+                      />
+
+                      {/* Icon */}
+                      <div
+                        className="relative z-10 text-7xl md:text-8xl transition-transform duration-500 group-hover:scale-110 group-hover:-translate-y-1"
+                        style={{
+                          filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.5))',
+                        }}
+                      >
+                        {service.icon}
+                      </div>
+                    </div>
+
+                    {/* ── Card info ── */}
+                    <div className="relative z-10 px-7 pb-8 pt-2 text-center">
+                      <h3 className="text-lg md:text-xl font-bold text-white mb-3 tracking-tight">
+                        {service.title}
+                      </h3>
+                      <p className="text-[15px] text-[#9CA3AF] leading-[1.8]">
+                        {service.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom accent line */}
+                    <div
+                      className="h-[2px] w-0 group-hover:w-full transition-all duration-700 ease-out mx-auto"
+                      style={{ background: 'linear-gradient(90deg, transparent, #1B7EFC, transparent)' }}
+                    />
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* ── Progress dots ── */}
+          <div className="flex items-center justify-center gap-2 mt-10">
+            {services.map((_, idx) => {
+              const isActive =
+                idx >= currentIndex && idx < currentIndex + VISIBLE_COUNT
+                  ? true
+                  : currentIndex + VISIBLE_COUNT > services.length &&
+                    idx < (currentIndex + VISIBLE_COUNT) % services.length;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  className="transition-all duration-300 rounded-full"
+                  style={{
+                    width: isActive ? 24 : 8,
+                    height: 8,
+                    background: isActive
+                      ? '#1B7EFC'
+                      : 'rgba(255,255,255,0.15)',
+                  }}
+                />
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );

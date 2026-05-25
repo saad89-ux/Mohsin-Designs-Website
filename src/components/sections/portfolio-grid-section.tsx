@@ -13,11 +13,11 @@ export function PortfolioGridSection() {
   ];
 
   return (
-    <section className="min-h-screen py-20 pt-40 bg-white">
+    <section className="min-h-screen py-20 pt-40 bg-[#0A192F]">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-16 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-[#0305a8] md:text-5xl lg:text-6xl">Portfolio</h1>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <h1 className="mb-4 text-4xl font-bold text-[#00E5FF] md:text-5xl lg:text-6xl">Portfolio</h1>
+          <p className="mx-auto max-w-2xl text-lg text-gray-300">
             Explore our latest projects and case studies
           </p>
         </div>
@@ -27,14 +27,14 @@ export function PortfolioGridSection() {
             <Link
               key={project.title}
               href={project.link}
-              className="group relative block overflow-hidden rounded-lg border border-slate-100 bg-[#f7f8fc]/40 transition-all hover:border-[#0305a8]/20 hover:bg-white hover:shadow-md shadow-sm"
+              className="group relative block overflow-hidden rounded-lg border border-slate-700 bg-[#0f2d3f]/40 transition-all hover:border-[#00E5FF]/20 hover:bg-[#0f2d3f] hover:shadow-md shadow-sm"
             >
-              <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-[#0305a8]/5 to-blue-500/5 text-6xl">
+              <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-[#0A192F]/5 to-blue-500/5 text-6xl">
                 {project.image}
               </div>
               <div className="p-6">
-                <p className="mb-2 text-xs font-semibold text-[#0305a8]">{project.category}</p>
-                <h3 className="font-bold text-[#0305a8] transition-colors group-hover:text-[#3b82f6]">{project.title}</h3>
+                <p className="mb-2 text-xs font-semibold text-[#00E5FF]">{project.category}</p>
+                <h3 className="font-bold text-[#00E5FF] transition-colors group-hover:text-[#64FFDA]">{project.title}</h3>
               </div>
             </Link>
           ))}

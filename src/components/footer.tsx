@@ -88,24 +88,24 @@ export function Footer() {
   };
 
   return (
-    <footer className="border-t border-[#0305a8]/10 bg-white">
+    <footer className="border-t border-black/8 bg-[#F8F9FA]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         {/* Newsletter Section */}
-        <div className="mb-12 rounded-lg bg-gradient-to-r from-[#0305a8]/5 to-[#3b82f6]/5 border border-[#0305a8]/10 p-8">
+        <div className="mb-12 rounded-lg bg-gradient-to-r from-[#3B82F6]/5 to-[#3B82F6]/5 border border-[#3B82F6]/10 p-8">
           <div className="max-w-2xl">
-            <h3 className="mb-2 text-2xl font-bold text-[#0305a8]">Stay Updated</h3>
-            <p className="mb-4 text-muted-foreground">
+            <h3 className="mb-2 text-2xl font-bold text-[#3B82F6]">Stay Updated</h3>
+            <p className="mb-4 text-[#444444]">
               Get the latest insights on digital marketing and design trends.
             </p>
             <form className="flex gap-2">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 rounded-lg bg-slate-50 border border-slate-200 px-4 py-3 text-sm placeholder-muted-foreground outline-none transition-colors focus:border-[#0305a8]/30 focus:bg-white text-gray-900"
+                className="flex-1 rounded-lg bg-white border border-[#3B82F6]/30 px-4 py-3 text-sm placeholder-[#777777]/60 outline-none transition-colors focus:border-[#3B82F6] focus:bg-white text-[#000000]"
               />
               <button
                 type="submit"
-                className="rounded-lg bg-[#0305a8] px-6 py-3 font-medium text-[#fff35c] transition-all hover:bg-[#0305a8]/90 hover:shadow-lg"
+                className="rounded-lg bg-[#3B82F6] px-6 py-3 font-medium text-white transition-all hover:bg-[#2563EB] hover:shadow-lg hover:shadow-[#3B82F6]/30"
               >
                 Subscribe
               </button>

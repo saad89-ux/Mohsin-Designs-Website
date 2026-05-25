@@ -37,13 +37,13 @@ export function ServicesGridSection() {
   ];
 
   return (
-    <section className="min-h-screen py-20 pt-40 bg-white">
+    <section className="min-h-screen py-20 pt-40 bg-[#0A192F]">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-16 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-[#0305a8] md:text-5xl lg:text-6xl">
+          <h1 className="mb-4 text-4xl font-bold text-[#00E5FF] md:text-5xl lg:text-6xl">
             Our Services
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <p className="mx-auto max-w-2xl text-lg text-gray-300">
             Comprehensive digital solutions tailored to your business needs
           </p>
         </div>
@@ -53,11 +53,11 @@ export function ServicesGridSection() {
             <Link
               key={service.title}
               href={service.href}
-              className="group block rounded-lg border border-slate-100 bg-[#f7f8fc]/40 p-6 shadow-sm transition-all hover:border-[#0305a8]/20 hover:bg-white hover:shadow-md"
+              className="group block rounded-lg border border-slate-700 bg-[#0f2d3f]/40 p-6 shadow-sm transition-all hover:border-[#00E5FF]/20 hover:bg-[#0f2d3f] hover:shadow-md"
             >
-              <h3 className="mb-2 text-xl font-bold text-[#0305a8] transition-colors group-hover:text-[#3b82f6]">{service.title}</h3>
-              <p className="text-gray-600 mb-4">{service.description}</p>
-              <div className="text-sm font-semibold text-[#0305a8] flex items-center gap-1 group-hover:underline">
+              <h3 className="mb-2 text-xl font-bold text-[#00E5FF] transition-colors group-hover:text-[#64FFDA]">{service.title}</h3>
+              <p className="text-gray-300 mb-4">{service.description}</p>
+              <div className="text-sm font-semibold text-[#00E5FF] flex items-center gap-1 group-hover:underline">
                 Explore Service &rarr;
               </div>
             </Link>

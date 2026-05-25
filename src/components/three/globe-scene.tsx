@@ -24,7 +24,7 @@ export function GlobeScene() {
       {/* Wireframe Globe */}
       <Sphere args={[1, 64, 64]}>
         <meshBasicMaterial
-          color="#0305a8"
+          color="#0A192F"
           wireframe
           transparent
           opacity={0.3}
@@ -34,7 +34,7 @@ export function GlobeScene() {
       {/* Atmospheric Halo */}
       <Sphere args={[1.05, 32, 32]}>
         <meshPhongMaterial
-          color="#3b82f6"
+          color="#00E5FF"
           transparent
           opacity={0.1}
           side={THREE.BackSide}
@@ -44,8 +44,8 @@ export function GlobeScene() {
 
       {/* Lighting */}
       <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} color="#3b82f6" intensity={2} />
-      <pointLight position={[-10, -10, -10]} color="#0305a8" intensity={1} />
+      <pointLight position={[10, 10, 10]} color="#00E5FF" intensity={2} />
+      <pointLight position={[-10, -10, -10]} color="#0A192F" intensity={1} />
     </group>
   );
 }

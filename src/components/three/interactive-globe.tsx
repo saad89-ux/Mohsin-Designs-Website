@@ -30,7 +30,7 @@ function GlobeInner() {
       const points = curve.getPoints(40);
       return {
         points: points.map((p) => [p.x, p.y, p.z] as [number, number, number]),
-        color: i === 0 ? '#fff35c' : '#3b82f6',
+        color: i === 0 ? '#64FFDA' : '#00E5FF',
         opacity: i === 0 ? 0.5 : 0.3,
         startPt: start,
         endPt: end,
@@ -54,15 +54,15 @@ function GlobeInner() {
       {/* Lighting */}
       <ambientLight intensity={0.8} />
       <directionalLight position={[8, 6, 4]} intensity={1.5} color="#e0e8ff" />
-      <pointLight position={[-6, -4, 6]} intensity={0.6} color="#3b82f6" distance={20} />
-      <pointLight position={[4, 8, -4]} intensity={0.3} color="#fff35c" distance={15} />
+      <pointLight position={[-6, -4, 6]} intensity={0.6} color="#00E5FF" distance={20} />
+      <pointLight position={[4, 8, -4]} intensity={0.3} color="#64FFDA" distance={15} />
 
       <group ref={groupRef}>
         {/* Core wireframe sphere */}
         <Sphere args={[2, 48, 48]}>
           <meshPhongMaterial
             color="#0a1628"
-            emissive="#1e3a8a"
+            emissive="#1A237E"
             emissiveIntensity={0.15}
             transparent
             opacity={0.95}
@@ -74,7 +74,7 @@ function GlobeInner() {
         <Sphere args={[1.96, 32, 32]}>
           <meshPhongMaterial
             color="#050914"
-            emissive="#0305a8"
+            emissive="#0A192F"
             emissiveIntensity={0.05}
             transparent
             opacity={0.4}
@@ -84,7 +84,7 @@ function GlobeInner() {
         {/* Atmospheric halo — BackSide glow */}
         <Sphere args={[2.25, 32, 32]} ref={haloRef}>
           <meshBasicMaterial
-            color="#3b82f6"
+            color="#00E5FF"
             transparent
             opacity={0.04}
             side={THREE.BackSide}
@@ -108,11 +108,11 @@ function GlobeInner() {
           <group key={`dots-${i}`}>
             <mesh position={arc.startPt}>
               <sphereGeometry args={[0.04, 8, 8]} />
-              <meshBasicMaterial color={i === 0 ? '#fff35c' : '#60a5fa'} />
+              <meshBasicMaterial color={i === 0 ? '#64FFDA' : '#64FFDA'} />
             </mesh>
             <mesh position={arc.endPt}>
               <sphereGeometry args={[0.04, 8, 8]} />
-              <meshBasicMaterial color={i === 0 ? '#fff35c' : '#60a5fa'} />
+              <meshBasicMaterial color={i === 0 ? '#64FFDA' : '#64FFDA'} />
             </mesh>
           </group>
         ))}

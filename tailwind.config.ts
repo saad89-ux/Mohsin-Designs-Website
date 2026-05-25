@@ -44,6 +44,12 @@ const config: Config = {
           foreground: 'hsl(var(--secondary) / <alpha-value>)',
         },
         electric: 'hsl(var(--electric) / <alpha-value>)',
+        black: '#000000',
+        charcoal: '#121212',
+        'dark-gray': '#1a1a1a',
+        'off-white': '#F8F9FA',
+        'soft-cream': '#F4F1EA',
+        gold: '#C8A96B',
       },
       borderRadius: {
         lg: 'calc(var(--radius) + 2px)',
@@ -76,7 +82,7 @@ const config: Config = {
       },
       boxShadow: {
         card: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-        glow: '0 0 20px 0 rgb(210 100% 50% / 0.5)',
+        glow: '0 0 20px 0 rgb(59 130 246 / 0.5)',
       },
     },
   },
